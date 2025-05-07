@@ -1,0 +1,69 @@
+package ru.test.subscriptions.service.impl;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.test.subscriptions.controller.dto.UserDto;
+import ru.test.subscriptions.entity.User;
+import ru.test.subscriptions.repository.UserRepository;
+import ru.test.subscriptions.service.UserService;
+
+import java.util.Optional;
+
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class UserServiceImpl implements UserService {
+
+    public static final String USER_WITH_ID_NOT_FOUND = "User with id = {} not found.";
+    private final UserRepository userRepository;
+
+    @Transactional
+    @Override
+    public UserDto createUser(UserDto user) {
+        User createdUser = User.builder()
+                .name(user.getName())
+                .surname(user.getSurname())
+                .birthday(user.getBirthday())
+                .phoneNumber(user.getPhoneNumber())
+                .email(user.getEmail())
+                .build();
+        return UserDto.of(userRepository.save(createdUser));
+    }
+
+    @Transactional
+    @Override
+    public UserDto getUser(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            return UserDto.of(optionalUser.get());
+        }
+        log.info(USER_WITH_ID_NOT_FOUND, id);
+        return null;
+    }
+
+    @Transactional
+    @Override
+    public UserDto updateUser(Long id, UserDto user) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User foundUser = optionalUser.get();
+            foundUser = foundUser.toBuilder()
+                    .name(Optional.ofNullable(user.getName()).orElse(foundUser.getName()))
+                    .surname(Optional.ofNullable(user.getSurname()).orElse(foundUser.getSurname()))
+                    .birthday(Optional.ofNullable(user.getBirthday()).orElse(foundUser.getBirthday()))
+                    .phoneNumber(Optional.ofNullable(user.getPhoneNumber()).orElse(foundUser.getPhoneNumber()))
+                    .email(Optional.ofNullable(user.getEmail()).orElse(foundUser.getEmail()))
+                    .build();
+            return UserDto.of(userRepository.save(foundUser));
+        }
+        log.info(USER_WITH_ID_NOT_FOUND, id);
+        return null;
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+}
