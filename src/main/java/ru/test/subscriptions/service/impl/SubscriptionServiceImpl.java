@@ -3,7 +3,6 @@ package ru.test.subscriptions.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.test.subscriptions.controller.dto.SubscriptionDto;
 import ru.test.subscriptions.entity.Subscription;
 import ru.test.subscriptions.entity.User;
@@ -24,7 +23,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     @Override
     public void createSubscription(Long userId, SubscriptionDto subscriptionDto) {
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -42,7 +40,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         log.info("Subscription with id = {} for user with id = {} saved", saved.getId(), userId);
     }
 
-    @Transactional
     @Override
     public List<SubscriptionDto> getSubscriptions(Long userId) {
         return subscriptionRepository.findByUserId(userId).stream()

@@ -3,7 +3,6 @@ package ru.test.subscriptions.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.test.subscriptions.controller.dto.UserDto;
 import ru.test.subscriptions.entity.User;
 import ru.test.subscriptions.repository.UserRepository;
@@ -19,7 +18,6 @@ public class UserServiceImpl implements UserService {
     public static final String USER_WITH_ID_NOT_FOUND = "User with id = {} not found.";
     private final UserRepository userRepository;
 
-    @Transactional
     @Override
     public UserDto createUser(UserDto user) {
         User createdUser = User.builder()
@@ -33,7 +31,6 @@ public class UserServiceImpl implements UserService {
         return UserDto.of(userRepository.save(createdUser));
     }
 
-    @Transactional
     @Override
     public UserDto getUser(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
@@ -44,7 +41,6 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Transactional
     @Override
     public UserDto updateUser(Long id, UserDto user) {
         Optional<User> optionalUser = userRepository.findById(id);
