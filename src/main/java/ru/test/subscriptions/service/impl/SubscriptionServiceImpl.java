@@ -45,15 +45,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional
     @Override
     public List<SubscriptionDto> getSubscriptions(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            List<Subscription> subscriptions = optionalUser.get().getSubscriptions();
-            return subscriptions.stream()
-                    .map(SubscriptionDto::of)
-                    .toList();
-        }
-        log.info(USER_WITH_ID_NOT_FOUND, userId);
-        return null;
+        return subscriptionRepository.findByUserId(userId).stream()
+                .map(SubscriptionDto::of)
+                .toList();
     }
 
     @Override

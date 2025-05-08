@@ -13,4 +13,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
     @Query(value = "select s.serviceName from Subscription s group by s.serviceName order by count(*) desc limit 3")
     List<String> getTop();
+
+    List<Subscription> findByUserId(Long userId);
 }
