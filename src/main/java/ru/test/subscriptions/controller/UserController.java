@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.test.subscriptions.controller.dto.SubscriptionDto;
 import ru.test.subscriptions.controller.dto.UserDto;
+import ru.test.subscriptions.service.SubscriptionService;
 import ru.test.subscriptions.service.UserService;
+
+import java.util.List;
 
 import static ru.test.subscriptions.controller.Paths.ID;
 import static ru.test.subscriptions.controller.Paths.SUBSCRIPTIONS;
@@ -26,6 +29,8 @@ import static ru.test.subscriptions.controller.Paths.USERS;
 public class UserController {
 
     private final UserService userService;
+
+    private final SubscriptionService subscriptionService;
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user) {
@@ -48,20 +53,20 @@ public class UserController {
     }
 
     @PostMapping(ID + SUBSCRIPTIONS)
-    public ResponseEntity<SubscriptionDto> createSubscription(
+    public void createSubscription(
             @PathVariable Long id,
-            @RequestBody SubscriptionDto subscriptionDto
+            @Valid @RequestBody SubscriptionDto subscriptionDto
     ) {
-        return null;
+        subscriptionService.createSubscription(id, subscriptionDto);
     }
 
     @GetMapping(ID + SUBSCRIPTIONS)
-    public SubscriptionDto getSubscription(@PathVariable Long id) {
-        return null;
+    public ResponseEntity<List<SubscriptionDto>> getSubscription(@PathVariable Long id) {
+        return ResponseEntity.ok(subscriptionService.getSubscriptions(id));
     }
 
     @DeleteMapping(ID + SUBSCRIPTIONS + SUBSCRIPTION_ID)
-    public void deleteSubscription(@PathVariable Long id, @PathVariable Long subscriptionId) {
-
+    public void deleteSubscription(@PathVariable Long id, @PathVariable("sub_id") Long subscriptionId) {
+        subscriptionService.deleteSubscription(id, subscriptionId);
     }
 }

@@ -35,3 +35,39 @@ databaseChangeLog:
                   type: varchar(50)
                   constraints:
                     nullable: false
+  - changeSet:
+      id: 2
+      author: kcherd
+      changes:
+        - createTable:
+            tableName: subscription
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: service_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date_of_paid_period
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subscription_fee
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_id
+                    references: user(id)
