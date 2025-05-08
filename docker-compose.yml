@@ -1,0 +1,27 @@
+services:
+  app:
+    image: 'subscriptions'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db/subuser
+      - POSTGRES_USERNAME=subuser
+      - POSTGRES_PASSWORD=subuser
+  db:
+    image: postgres:13.3
+    container_name: db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: "subuser"
+      POSTGRES_USER: "subuser"
+      POSTGRES_PASSWORD: "subuser"
+      TZ: "Europe/Moscow"
+    volumes:
+      - .:/docker-entrypoint-initdb.d

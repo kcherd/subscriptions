@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .email(user.getEmail())
                 .build();
+        log.info("User with id = {} created", createdUser.getId());
         return UserDto.of(userRepository.save(createdUser));
     }
 
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
                     .phoneNumber(Optional.ofNullable(user.getPhoneNumber()).orElse(foundUser.getPhoneNumber()))
                     .email(Optional.ofNullable(user.getEmail()).orElse(foundUser.getEmail()))
                     .build();
+            log.info("User with id = {} updated", foundUser.getId());
             return UserDto.of(userRepository.save(foundUser));
         }
         log.info(USER_WITH_ID_NOT_FOUND, id);
@@ -65,5 +67,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+        log.info("User with id = {} deleted", id);
     }
 }
